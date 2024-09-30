@@ -68,7 +68,7 @@ class HomeScreen extends StatelessWidget {
                     child: ListView.separated(
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (context, index) {
-                        return NewReleasesItem(index: index,);
+                        return NewReleasesItem(index: index);
                       },
                       separatorBuilder: (context, index) {
                         return const SizedBox(width: 15,);
@@ -100,7 +100,7 @@ class HomeScreen extends StatelessWidget {
                     child: ListView.separated(
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (context, index) {
-                        return RecommendedMovieItem(index: index,);
+                        return RecommendedMovieItem(index: index);
                       },
                       separatorBuilder: (context, index) {
                         return const SizedBox(width: 15,);

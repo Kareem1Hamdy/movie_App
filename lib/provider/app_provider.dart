@@ -1,10 +1,11 @@
-
 import 'dart:convert';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_app/Api/api_manager.dart';
 import 'package:movie_app/models/browse_models/filters_movie_model.dart';
 import 'package:movie_app/models/browse_models/generals_movie_model.dart';
+import 'package:movie_app/models/favourite_model/favourite_model.dart';
 import 'package:movie_app/models/movieDetails/movie_details.dart';
 import 'package:movie_app/models/movieDetails/similars_model.dart';
 import 'package:movie_app/models/popular_models/populars_model.dart';
@@ -17,6 +18,9 @@ class AppProvider extends ChangeNotifier{
   changeItemOnBottomNavBar(index){
     currentIndex=index;
     notifyListeners();
+    if(index==3){
+      getFavourite();
+    }
   }
 
   PopularsModel? popularsModel;
@@ -35,7 +39,7 @@ class AppProvider extends ChangeNotifier{
      var data=jsonDecode(response.body);
      popularsModel= PopularsModel.fromJson(data);
      notifyListeners();
-     //print('kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk${data['page']}');
+     print('${userCredential!.user!.uid}');
    }
    catch(e){
      print('errrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrror${e}');
@@ -124,5 +128,59 @@ class AppProvider extends ChangeNotifier{
       print(e);
     }
   }
+
+   UserCredential? userCredential;
+   void login() async{
+     try {
+       userCredential = await FirebaseAuth.instance.signInAnonymously();
+       print("Signed in with temporary account.");
+     } on FirebaseAuthException catch (e) {
+       switch (e.code) {
+       case "operation-not-allowed":
+       print("Anonymous auth hasn't been enabled for this project.");
+       break;
+       default:
+       print("Unknown error.$e");
+       }
+     }
+   }
+
+   var db = FirebaseFirestore.instance;
+   Future<void> addToFavourite(dynamic model)async{
+     try{
+       await db.collection('users')
+           .doc(userCredential?.user?.uid)
+           .collection('Favorites')
+           .doc(model.id.toString())
+           .set({"title":"${model.title}",
+              "image":"${model.posterPath}",
+              "date":"${model.releaseDate}",
+              "id":"${model.id}",
+       });
+
+       print("successfully added---------------------------------------------------------------------------");
+     }catch(e){
+       print("failed ---------------------------------------------------------------------------${e}");
+     }
+   }
+
+  List<FavouriteModel> favourites=[];
+  getFavourite()async{
+    favourites=[];
+       await db.collection('users')
+           .doc(userCredential?.user?.uid)
+           .collection('Favorites').get()
+           .then((value) {
+             value.docs.forEach((element){
+               favourites.add(FavouriteModel.fromFireStore(element.data()));
+             });
+             notifyListeners();
+       }).catchError((error){
+         print('$error');
+       });
+   }
+
+
+
 
 }

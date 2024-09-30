@@ -28,7 +28,11 @@ class RecommendedMovieItem extends StatelessWidget {
               Stack(
                 children: [
                   Image.network('${Constant.imageConstant}${provider.topRatedsModel!.results[index].posterPath}',width: 97,height: 128,),
-                  Image.asset('assets/images/bookmark.png',width: 27,height: 36,),
+                  GestureDetector(
+                    onTap: (){
+                      provider.addToFavourite(provider.topRatedsModel!.results[index]);
+                    },
+                      child: Image.asset('assets/images/bookmark.png',width: 27,height: 36,)),
                 ],
               ),
               Row(

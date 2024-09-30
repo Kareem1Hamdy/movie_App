@@ -18,24 +18,26 @@ class SearchItem extends StatelessWidget {
             child: Image.network('${Constant.imageConstant}${provider.searchesModel!.results[index].posterPath}',width: 140,height: 150,),
           ),
           const SizedBox(width: 10,),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                '${provider.searchesModel!.results[index].title}',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '${provider.searchesModel!.results[index].title}',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18
+                  ),
                 ),
-              ),
-              Text(
-                '${provider.searchesModel!.results[index].releaseDate}',
-                style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 16
+                Text(
+                  '${provider.searchesModel!.results[index].releaseDate}',
+                  style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 16
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),

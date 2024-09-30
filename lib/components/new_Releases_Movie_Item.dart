@@ -21,7 +21,11 @@ class NewReleasesItem extends StatelessWidget {
       child: Stack(
           children: [
             Image.network('${Constant.imageConstant}${provider.upComingsModel!.results[index].posterPath}',width: 97,height: 128,),
-            Image.asset('assets/images/bookmark.png',width: 27,height: 36,),
+            GestureDetector(
+              onTap: (){
+                provider.addToFavourite(provider.upComingsModel!.results[index]);
+              },
+                child: Image.asset('assets/images/bookmark.png',width: 27,height: 36,)),
           ],
         ),
     );

@@ -23,6 +23,7 @@ class MainScreen extends StatelessWidget {
         currentIndex: provider.currentIndex,
         onTap: (index){
           provider.changeItemOnBottomNavBar(index);
+
         },
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.home),label: 'HOME',backgroundColor: Color(0xff1A1A1A)),
